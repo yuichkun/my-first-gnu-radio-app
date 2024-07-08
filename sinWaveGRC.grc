@@ -44,6 +44,27 @@ blocks:
     bus_structure: null
     coordinate: [272, 8.0]
     rotation: 0
+    state: disabled
+- name: frequency
+  id: variable_qtgui_range
+  parameters:
+    comment: ''
+    gui_hint: ''
+    label: ''
+    min_len: '200'
+    orient: QtCore.Qt.Horizontal
+    rangeType: float
+    start: -samp_rate/2
+    step: '100'
+    stop: samp_rate/2
+    value: '0'
+    widget: counter_slider
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [488, 16.0]
+    rotation: 0
     state: enabled
 - name: samp_rate
   id: variable

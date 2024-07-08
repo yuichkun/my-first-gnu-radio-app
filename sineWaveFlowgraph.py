@@ -10,6 +10,7 @@
 
 from PyQt5 import Qt
 from gnuradio import qtgui
+from PyQt5 import QtCore
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import gr
@@ -61,12 +62,15 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 32000
-        self.frequency = frequency = samp_rate / 3
+        self.frequency = frequency = 0
 
         ##################################################
         # Blocks
         ##################################################
 
+        self._frequency_range = qtgui.Range(-samp_rate/2, samp_rate/2, 100, 0, 200)
+        self._frequency_win = qtgui.RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", float, QtCore.Qt.Horizontal)
+        self.top_layout.addWidget(self._frequency_win)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
             1024, #size
             samp_rate, #samp_rate
@@ -185,7 +189,6 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.set_frequency(self.samp_rate / 3)
         self.analog_sig_source_x_0.set_sampling_freq(self.samp_rate)
         self.blocks_throttle2_0.set_sample_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
