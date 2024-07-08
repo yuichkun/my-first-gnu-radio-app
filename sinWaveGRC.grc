@@ -33,6 +33,18 @@ options:
     state: enabled
 
 blocks:
+- name: frequency
+  id: variable
+  parameters:
+    comment: ''
+    value: '3000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [272, 8.0]
+    rotation: 0
+    state: enabled
 - name: samp_rate
   id: variable
   parameters:
@@ -52,7 +64,7 @@ blocks:
     alias: ''
     amp: '1'
     comment: ''
-    freq: '1000'
+    freq: frequency
     maxoutbuf: '0'
     minoutbuf: '0'
     offset: '0'

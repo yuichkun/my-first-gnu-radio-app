@@ -24,7 +24,6 @@ from gnuradio import eng_notation
 import sip
 
 
-
 class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
 
     def __init__(self):
@@ -61,6 +60,7 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
         # Variables
         ##################################################
         self.samp_rate = samp_rate = 32000
+        self.frequency = frequency = 4000
 
         ##################################################
         # Blocks
@@ -160,7 +160,7 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
         self._qtgui_freq_sink_x_0_win = sip.wrapinstance(self.qtgui_freq_sink_x_0.qwidget(), Qt.QWidget)
         self.top_layout.addWidget(self._qtgui_freq_sink_x_0_win)
         self.blocks_throttle2_0 = blocks.throttle( gr.sizeof_gr_complex*1, samp_rate, True, 0 if "auto" == "auto" else max( int(float(0.1) * samp_rate) if "auto" == "time" else int(0.1), 1) )
-        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, 1000, 1, 0, 0)
+        self.analog_sig_source_x_0 = analog.sig_source_c(samp_rate, analog.GR_COS_WAVE, frequency, 1, 0, 0)
 
 
         ##################################################
@@ -188,6 +188,13 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
         self.blocks_throttle2_0.set_sample_rate(self.samp_rate)
         self.qtgui_freq_sink_x_0.set_frequency_range(0, self.samp_rate)
         self.qtgui_time_sink_x_0.set_samp_rate(self.samp_rate)
+
+    def get_frequency(self):
+        return self.frequency
+
+    def set_frequency(self, frequency):
+        self.frequency = frequency
+        self.analog_sig_source_x_0.set_frequency(self.frequency)
 
 
 
