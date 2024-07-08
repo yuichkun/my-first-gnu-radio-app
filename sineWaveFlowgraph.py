@@ -10,7 +10,7 @@
 
 from PyQt5 import Qt
 from gnuradio import qtgui
-from PyQt5 import QtCore
+from PyQt5.QtCore import QObject, pyqtSlot
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import gr
@@ -68,9 +68,22 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
         # Blocks
         ##################################################
 
-        self._frequency_range = qtgui.Range(-samp_rate/2, samp_rate/2, 100, 0, 200)
-        self._frequency_win = qtgui.RangeWidget(self._frequency_range, self.set_frequency, "'frequency'", "counter_slider", float, QtCore.Qt.Horizontal)
-        self.top_layout.addWidget(self._frequency_win)
+        # Create the options list
+        self._frequency_options = [0, 1000, -2000]
+        # Create the labels list
+        self._frequency_labels = ['Frequency 0', 'Frequency 1000', 'Frequency -2000']
+        # Create the combo box
+        self._frequency_tool_bar = Qt.QToolBar(self)
+        self._frequency_tool_bar.addWidget(Qt.QLabel("'frequency'" + ": "))
+        self._frequency_combo_box = Qt.QComboBox()
+        self._frequency_tool_bar.addWidget(self._frequency_combo_box)
+        for _label in self._frequency_labels: self._frequency_combo_box.addItem(_label)
+        self._frequency_callback = lambda i: Qt.QMetaObject.invokeMethod(self._frequency_combo_box, "setCurrentIndex", Qt.Q_ARG("int", self._frequency_options.index(i)))
+        self._frequency_callback(self.frequency)
+        self._frequency_combo_box.currentIndexChanged.connect(
+            lambda i: self.set_frequency(self._frequency_options[i]))
+        # Create the radio buttons
+        self.top_layout.addWidget(self._frequency_tool_bar)
         self.qtgui_time_sink_x_0 = qtgui.time_sink_c(
             1024, #size
             samp_rate, #samp_rate
@@ -199,6 +212,7 @@ class sineWaveFlowgraph(gr.top_block, Qt.QWidget):
 
     def set_frequency(self, frequency):
         self.frequency = frequency
+        self._frequency_callback(self.frequency)
         self.analog_sig_source_x_0.set_frequency(self.frequency)
 
 
